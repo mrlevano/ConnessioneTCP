@@ -34,6 +34,7 @@ public class ClientConnessioneTCP {
         try{
             connection = new Socket(serverAddress, port);
             System.out.println("Connessione aperta");
+            // Creo input e output per streams orientati ai byte
             BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
             BufferedWriter outputClient = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
         }
