@@ -6,10 +6,9 @@
 package Connection;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -44,7 +43,7 @@ public class ServerConnessioneTCP {
                 System.out.println("Socket client: " + connection.getRemoteSocketAddress());
                 // Creo input e output per streams orientati ai byte
                 BufferedReader inputServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                BufferedWriter outputServer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
+                PrintStream outputServer = new PrintStream(connection.getOutputStream());
                 messaggioInput = inputServer.readLine();
                 System.out.println("Messaggio del client : " + messaggioInput);
                 
@@ -66,7 +65,8 @@ public class ServerConnessioneTCP {
                         messaggioOutput = "Scusa, non so come risponderti.";
                 }
                 System.out.println("Risposta da mandare: " + messaggioOutput);
-                outputServer.write(messaggioOutput);
+                outputServer.println(messaggioOutput);
+                outputServer.flush();
                 
             }
                catch(IOException e){
