@@ -29,8 +29,10 @@ public class ServerConnessioneTCP {
         ServerSocket sSocket = null;
         //oggetto da usare per realizzare la connessione TCP
         Socket connection;
+        String messaggioInput, messaggioOutput;
+        boolean continua = true;
 
-        while(true){
+        while(continua){
             try{
                 // il server si mette in ascolto sulla porta voluta
                 sSocket = new ServerSocket(port);
@@ -43,6 +45,29 @@ public class ServerConnessioneTCP {
                 // Creo input e output per streams orientati ai byte
                 BufferedReader inputServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 BufferedWriter outputServer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
+                messaggioInput = inputServer.readLine();
+                System.out.println("Messaggio del client : " + messaggioInput);
+                
+                switch(messaggioInput) {
+                    case "ciao" :
+                        messaggioOutput = "Ciao anon!";
+                        break;
+                    case "forza inter" :
+                        messaggioOutput = "Guarda il cielo. Di che colore è?";
+                        break;
+                    case "forza napoli" :
+                        messaggioOutput = "Si certo!";
+                        break;
+                    case "close" :
+                        messaggioOutput = "Ciao ciao!";
+                        continua = false;
+                        break;
+                    default:
+                        messaggioOutput = "Scusa, non so come risponderti.";
+                }
+                System.out.println("Risposta da mandare: " + messaggioOutput);
+                outputServer.write(messaggioOutput);
+                
             }
                catch(IOException e){
                    System.err.println("Errore di I/O!");
@@ -50,7 +75,9 @@ public class ServerConnessioneTCP {
             
             //chiusura della connessione con il client
             try {
-                if (sSocket!=null) sSocket.close();
+                if (sSocket!=null) {
+                    sSocket.close();
+                }
             } catch (IOException ex) {
                 System.err.println("Errore nella chiusura della connessione!");
             }
