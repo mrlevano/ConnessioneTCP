@@ -5,7 +5,11 @@
  */
 package Connection;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.net.ConnectException;
@@ -30,17 +34,18 @@ public class ClientConnessioneTCP {
         try{
             connection = new Socket(serverAddress, port);
             System.out.println("Connessione aperta");
+            BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
+            BufferedWriter outputClient = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
         }
         catch(ConnectException e){
-            System.err.println("Server non disponibile!");
+            System.err.println("Server non disponibile!\n" + e);
         }
         catch(UnknownHostException e1){
-            System.err.println("Errore DNS!");
+            System.err.println("Errore DNS!\n" + e1);
         }
 
-        catch(IOException e2){//
+        catch(IOException e2){
             System.err.println(e2);
-            e2.printStackTrace();
         }
 
         //chiusura della connnessione

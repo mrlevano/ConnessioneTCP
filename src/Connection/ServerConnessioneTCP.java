@@ -8,8 +8,6 @@ package Connection;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -22,7 +20,7 @@ public class ServerConnessioneTCP {
      */
     public static void main(String[] args) {
         // porta del server maggiore di 1024 
-        int port=2000;
+        int port = 2000;
         //oggetto ServerSocket necessario per accettare richieste dal client
         ServerSocket sSocket = null;
         //oggetto da usare per realizzare la connessione TCP
