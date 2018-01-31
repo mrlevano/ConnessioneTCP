@@ -29,14 +29,21 @@ public class ClientConnessioneTCP {
         String serverAddress = "localhost";
         //porta del server in ascolto
         int port = 2000;
-
+        String messaggioOutput, messaggioInput;
         //apertura della connessione al server sulla porta specificata
         try{
             connection = new Socket(serverAddress, port);
             System.out.println("Connessione aperta");
             // Creo input e output per streams orientati ai byte
             BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
+            BufferedReader inputClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             BufferedWriter outputClient = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
+            
+            System.out.println("Che voi scrivere al server?");
+            messaggioOutput = tastiera.readLine();
+            outputClient.write(messaggioOutput);
+            outputClient.flush();
+            
         }
         catch(ConnectException e){
             System.err.println("Server non disponibile!\n" + e);
