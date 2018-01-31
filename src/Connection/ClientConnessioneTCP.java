@@ -6,10 +6,9 @@
 package Connection;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.net.ConnectException;
@@ -37,12 +36,15 @@ public class ClientConnessioneTCP {
             // Creo input e output per streams orientati ai byte
             BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
             BufferedReader inputClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            BufferedWriter outputClient = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
+            PrintStream outputClient = new PrintStream(connection.getOutputStream());
             
             System.out.println("Che voi scrivere al server?");
             messaggioOutput = tastiera.readLine();
-            outputClient.write(messaggioOutput);
+            outputClient.println(messaggioOutput);
             outputClient.flush();
+            
+            messaggioInput = inputClient.readLine();
+            System.out.println(messaggioInput);
             
         }
         catch(ConnectException e){
