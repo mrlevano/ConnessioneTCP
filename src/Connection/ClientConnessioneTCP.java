@@ -69,7 +69,7 @@ public class ClientConnessioneTCP {
      */
     public boolean comunicaS(Socket connection) {
         String messaggioOutput, messaggioInput;
-        boolean continua = false;
+        boolean continua = true;
         
         try {
             BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
