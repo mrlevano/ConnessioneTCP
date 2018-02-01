@@ -12,8 +12,6 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -51,7 +49,7 @@ public class ServerConnessioneTCP {
             System.out.println("Socket client: " + connection.getRemoteSocketAddress());
             
             while(continua) {  // Conntinuo a ripetere fino a quando .ripondi() ritorna false
-                rispondi(connection);
+                continua = rispondi(connection);
             }
             
         } catch (IOException ex) {
@@ -71,7 +69,6 @@ public class ServerConnessioneTCP {
         String messaggioOutput, messaggioInput;
         boolean continua = true;
         
-        
         try {
             // Creo input e output per streams orientati ai byte
             BufferedReader inputServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -79,7 +76,7 @@ public class ServerConnessioneTCP {
             messaggioInput = inputServer.readLine();
             
             // Mostro la stringa che il client ha mandato
-            System.out.println("Messaggio del client : " + messaggioInput);
+            System.out.println("\n\nMessaggio del client : " + messaggioInput);
             
             switch(messaggioInput) { // A seconda della stringa mandata dall'utente il server risponde con un'altra
                 case "ciao" :
@@ -98,12 +95,11 @@ public class ServerConnessioneTCP {
                 default:
                     messaggioOutput = "Scusa, non so come risponderti.";
             }
-            System.out.println("Risposta da mandare: " + messaggioOutput);
             
             // Inoltro la risposta al client
             outputServer.println(messaggioOutput);
             outputServer.flush();
-            
+            System.out.println("Risposta inoltrata!");
         } catch (IOException ex) {
             System.err.println("Errore : " + ex.getMessage());
         }
@@ -116,14 +112,14 @@ public class ServerConnessioneTCP {
      * @param connection Oggetto socket che server contenente il metodo .close()
      */
     public void spegniServer(ServerSocket connection) {
-        if(connection != null) {
+        if(connection != null) { // Se l'oggetto connection non è nullo, allora chiudo la connessione
             try {
                 connection.close();
             } catch (IOException ex) {
-                System.err.println("Errore durante la chiusura: " + ex.getMessage());
+                System.err.println("\nErrore durante la chiusura: " + ex.getMessage());
             }
         }
-        System.out.println("Connessione chiusa!");
+        System.out.println("\nConnessione chiusa!");
     }
     
 }

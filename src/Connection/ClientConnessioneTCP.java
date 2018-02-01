@@ -77,7 +77,7 @@ public class ClientConnessioneTCP {
             PrintStream outputClient = new PrintStream(connection.getOutputStream());
             
             // Input da tastiera per il messaggio da mandare al server
-            System.out.println("Che voi scrivere al server?");
+            System.out.println("\nChe voi scrivere al server?");
             messaggioOutput = tastiera.readLine();
             // Invio il messaggio al server
             outputClient.println(messaggioOutput);
@@ -103,11 +103,11 @@ public class ClientConnessioneTCP {
      * @param connection Oggetto socket che server contenente il metodo .close()
      */
     public void chiudiConnessione(Socket connection) {
-        if(connection != null) {
+        if(connection != null) { // Se l'oggetto connection non è nullo, allora chiudo la connessione
             try {
                 connection.close();
             } catch (IOException ex) {
-                System.err.println("Errore durante la chiusura: " + ex.getMessage());
+                System.err.println("\nErrore durante la chiusura: " + ex.getMessage());
             }
         }
     }

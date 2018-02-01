@@ -12,7 +12,8 @@ package Connection;
 public class ServerMain {
     
     public static void main(String args[]) {
-        
+        ServerConnessioneTCP server = new ServerConnessioneTCP();
+        server.avviaServer();
     }
     
 }
