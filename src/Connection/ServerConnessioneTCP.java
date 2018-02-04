@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  *
@@ -88,7 +90,7 @@ public class ServerConnessioneTCP {
                 
                 // Mostro la stringa che il client ha mandato
                 System.out.println("\n\nMessaggio del client : " + messaggioInput);
-
+                messaggioInput = messaggioInput.toLowerCase();
                 switch(messaggioInput) { // A seconda della stringa mandata dall'utente il server risponde con un'altra
                     case "ciao" :
                         messaggioOutput = "Ciao anon!";
@@ -102,6 +104,10 @@ public class ServerConnessioneTCP {
                     case "close" :
                         messaggioOutput = "Ciao ciao!";
                         continua = false;
+                        break;
+                    case "che ore sono" : // Uso il GregorianCalendar per mostrare l'ora
+                        GregorianCalendar calendario = new GregorianCalendar();
+                        messaggioOutput = "Sono le " + calendario.get(Calendar.HOUR_OF_DAY) + ":" + calendario.get(Calendar.MINUTE) + " del " + calendario.get(Calendar.DATE) + "/" + (calendario.get(Calendar.MONTH)+1) + "/" + calendario.get(Calendar.YEAR);
                         break;
                     default:
                         messaggioOutput = "Scusa, non so come risponderti.";
@@ -121,7 +127,7 @@ public class ServerConnessioneTCP {
     /**
      * Metodo che chiude la connessione con il server
      */
-    public void spegniServer( ) {
+    public void spegniServer() {
         if(connection != null) { // Se l'oggetto connection non è nullo, allora chiudo la connessione
             try {
                 connection.close();
