@@ -29,6 +29,9 @@ public class ClientConnessioneTCP {
      */
     private final String indirizzoS;
     
+    /**
+     * Oggetto Socket
+     */
     private Socket connection;
     
     /**
@@ -43,7 +46,7 @@ public class ClientConnessioneTCP {
     /**
      * Costruttore della classe ClientConnessionTCP sovraccaricato con valori in input
      * @param indirizzoS indirizzo del server
-     * @param porta porta nella quale il server è in ascolto
+     * @param porta nella quale il server è in ascolto
      */
     public ClientConnessioneTCP(String indirizzoS, int porta) {
         this.porta = porta;
@@ -53,10 +56,8 @@ public class ClientConnessioneTCP {
     
     /**
      * Metodo che avvia una connessione e una comunicazione con il server
-     * @return 
      */
-    public Socket avviaConnessione() {
-        
+    public void avviaConnessione() {
         try {
             this.connection = new Socket(indirizzoS, porta);
         } catch(ConnectException e){
@@ -66,15 +67,12 @@ public class ClientConnessioneTCP {
         } catch (IOException e2) {
             System.err.println("Errore : " + e2.getMessage());
         }
-        return this.connection;
     }
     
     /**
      * Metodo che ottiene la stringa che il server manda come risposta alla richiesta del client
-     * @param connection Oggetto socket che server che contiene gli InputStream e OutputStream
-     * @return Booleana che indica se si deve continuare a scrivere al server oppure chiudere la connessione
      */
-    public boolean comunicaS(Socket connection) {
+    public void comunicaS() {
         String messaggioOutput, messaggioInput;
         boolean continua = true;
         
@@ -101,18 +99,13 @@ public class ClientConnessioneTCP {
             
         } catch (IOException ex) {
             System.err.println("Errore : " + ex.getMessage());
-        } finally {
-            chiudiConnessione(connection);
         }
-        
-        return continua;
     }
     
     /**
      * Metodo che chiude la connessione con il server
-     * @param connection Oggetto socket che server contenente il metodo .close()
      */
-    public void chiudiConnessione(Socket connection) {
+    public void chiudiConnessione() {
         if(connection != null) { // Se l'oggetto connection non è nullo, allora chiudo la connessione
             try {
                 connection.close();
