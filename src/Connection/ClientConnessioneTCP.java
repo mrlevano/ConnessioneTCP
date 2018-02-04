@@ -29,37 +29,44 @@ public class ClientConnessioneTCP {
      */
     private final String indirizzoS;
     
+    private Socket connection;
+    
     /**
-     * Costruttore della classe ClientConnessionTCP
+     * Costruttore della classe ClientConnessionTCP con valori i default
      */
     public ClientConnessioneTCP() {
         porta = 2000;
         indirizzoS = "localhost";
+        connection = null;
+    }
+    
+    /**
+     * Costruttore della classe ClientConnessionTCP sovraccaricato con valori in input
+     * @param indirizzoS indirizzo del server
+     * @param porta porta nella quale il server è in ascolto
+     */
+    public ClientConnessioneTCP(String indirizzoS, int porta) {
+        this.porta = porta;
+        this.indirizzoS = indirizzoS;
+        connection = null;
     }
     
     /**
      * Metodo che avvia una connessione e una comunicazione con il server
+     * @return 
      */
-    public void avviaConnessione() {
-        Socket connection = null;
-        boolean continua = true;
+    public Socket avviaConnessione() {
+        
         try {
-            connection = new Socket(indirizzoS, porta);
-            
-            while(continua) { // Conntinuo a ripetere fino a quando .comunicaS() ritorna false
-                continua = comunicaS(connection);
-            }
-            
+            this.connection = new Socket(indirizzoS, porta);
         } catch(ConnectException e){
             System.err.println("Server non disponibile!\n" + e.getMessage());
         } catch(UnknownHostException e1){
             System.err.println("Errore DNS!\n" + e1.getMessage());
         } catch (IOException e2) {
             System.err.println("Errore : " + e2.getMessage());
-        } finally {
-            chiudiConnessione(connection);
         }
-        
+        return this.connection;
     }
     
     /**
@@ -75,24 +82,27 @@ public class ClientConnessioneTCP {
             BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
             BufferedReader inputClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             PrintStream outputClient = new PrintStream(connection.getOutputStream());
-            
-            // Input da tastiera per il messaggio da mandare al server
-            System.out.println("\nChe voi scrivere al server?");
-            messaggioOutput = tastiera.readLine();
-            // Invio il messaggio al server
-            outputClient.println(messaggioOutput);
-            outputClient.flush();
-            
-            // Ricevo la risposta del server
-            messaggioInput = inputClient.readLine();
-            System.out.println(messaggioInput);
-            
-            if(messaggioInput.equals("Ciao ciao!")) { // Se il sever risponde ciao ciao allora si ritorna falso
-                continua = false;
-            }
+            do {
+                // Input da tastiera per il messaggio da mandare al server
+                System.out.println("\nChe voi scrivere al server?");
+                messaggioOutput = tastiera.readLine();
+                // Invio il messaggio al server
+                outputClient.println(messaggioOutput);
+                outputClient.flush();
+
+                // Ricevo la risposta del server
+                messaggioInput = inputClient.readLine();
+                System.out.println(messaggioInput);
+
+                if(messaggioInput.equals("Ciao ciao!")) { // Se il sever risponde ciao ciao allora si ritorna falso
+                    continua = false;
+                }
+            } while(continua);  // Conntinuo a ripetere fino a quando .comunicaS() ritorna false
             
         } catch (IOException ex) {
             System.err.println("Errore : " + ex.getMessage());
+        } finally {
+            chiudiConnessione(connection);
         }
         
         return continua;
