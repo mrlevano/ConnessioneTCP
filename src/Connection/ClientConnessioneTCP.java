@@ -104,7 +104,7 @@ public class ClientConnessioneTCP {
             do {
                 // Input da tastiera per il messaggio da mandare al server
                 
-                messaggioOutput = tastiera.readLine();
+                messaggioOutput = tastiera.readLine().toLowerCase();
                 if(messaggioOutput.contains("_")) {
                     gestisciMessaggio(messaggioInput);
                 }
@@ -175,7 +175,8 @@ public class ClientConnessioneTCP {
                 messaggioOutput = messaggioOutput.replaceAll("_time_", ora);
                 break;
             default:
-                
+                System.out.println("Comando non riconosciuto. Controllare la lista di comandi disponibili scivendo _man_");
+                messaggioOutput = messaggioOutput.replaceAll("_" + comando + "_", "");
         }
     }
     

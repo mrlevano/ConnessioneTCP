@@ -175,7 +175,8 @@ public class ServerConnessioneTCP {
                 messaggioOutput = messaggioOutput.replaceAll("_time_", ora);
                 break;
             default:
-                
+                System.out.println("Comando non riconosciuto. Controllare la lista di comandi disponibili scivendo _man_");
+                messaggioOutput = messaggioOutput.replaceAll("_" + comando + "_", "");
         }
     }
     
