@@ -36,12 +36,27 @@ public class ServerConnessioneTCP {
      */
     ServerSocket sSocket;
     
+    boolean continua;
+    
+    String messaggioOutput;
+    
+    String comando;
+    
+    String nome;
+    
+    boolean online;
+    
     /**
      * Costruttore della classe ServerConnessioneTCP
      */
     public ServerConnessioneTCP() {
         porta = 2000;
+        continua = true;
         sSocket = null;
+        messaggioOutput = "";
+        comando = "";
+        nome = "anon";
+        online = true;
     }
     
     /**
@@ -50,7 +65,12 @@ public class ServerConnessioneTCP {
      */
     public ServerConnessioneTCP(int porta) {
         this.porta = porta;
+        continua = true;
         sSocket = null;
+        messaggioOutput = "";
+        comando = "";
+        nome = "anon";
+        online = true;
     }
     
     /**
@@ -77,42 +97,22 @@ public class ServerConnessioneTCP {
      * Metodo che legge la stringa inviata da un client e ne elabora una risposta
      */
     public void rispondi() {
-        String messaggioOutput, messaggioInput;
-        boolean continua = true;
-        
+        String messaggioInput;
         try {
             // Creo input e output per streams orientati ai byte
             BufferedReader inputServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             PrintStream outputServer = new PrintStream(connection.getOutputStream());
+            BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
             
             do {
                 messaggioInput = inputServer.readLine();
                 
                 // Mostro la stringa che il client ha mandato
                 System.out.println("\n\nMessaggio del client : " + messaggioInput);
-                messaggioInput = messaggioInput.toLowerCase();
-                switch(messaggioInput) { // A seconda della stringa mandata dall'utente il server risponde con un'altra
-                    case "ciao" :
-                        messaggioOutput = "Ciao anon!";
-                        break;
-                    case "forza inter" :
-                        messaggioOutput = "Guarda il cielo. Di che colore è?";
-                        break;
-                    case "forza napoli" :
-                        messaggioOutput = "Si certo!";
-                        break;
-                    case "close" :
-                        messaggioOutput = "Ciao ciao!";
-                        continua = false;
-                        break;
-                    case "che ore sono" : // Uso il GregorianCalendar per mostrare l'ora
-                        GregorianCalendar calendario = new GregorianCalendar();
-                        messaggioOutput = "Sono le " + calendario.get(Calendar.HOUR_OF_DAY) + ":" + calendario.get(Calendar.MINUTE) + " del " + calendario.get(Calendar.DATE) + "/" + (calendario.get(Calendar.MONTH)+1) + "/" + calendario.get(Calendar.YEAR);
-                        break;
-                    default:
-                        messaggioOutput = "Scusa, non so come risponderti.";
+                messaggioOutput = tastiera.readLine().toLowerCase();
+                if(messaggioOutput.contains("_")) {
+                    gestisciMessaggio(messaggioInput);
                 }
-
                 // Inoltro la risposta al client
                 outputServer.println(messaggioOutput);
                 outputServer.flush();
@@ -136,6 +136,52 @@ public class ServerConnessioneTCP {
             }
         }
         System.out.println("\nConnessione chiusa!");
+    }
+    
+    public void gestisciMessaggio(String messaggioInput) {
+        String[] messaggioDiv = messaggioOutput.split("_",3);
+        comando = messaggioDiv[1];
+        switch(comando) { // A seconda della stringa mandata dall'utente il server risponde con un'altra
+            case "autore" :
+                messaggioOutput = messaggioOutput.replaceAll("_autore_", nome);
+                break;
+            case "online" :
+                online = true;
+                break;
+            case "offline" :
+                online = false;
+                break;
+            case "like" :
+                messaggioOutput = messaggioOutput.replaceAll("_like_", "\uD83D\uDE40");
+                break;
+            case "setname" :
+                setNome();
+                break;
+            case "echo" :
+                messaggioOutput = messaggioOutput.replaceAll("_echo_", messaggioInput);
+                break;
+            case "close" :
+                messaggioOutput = "Ciao ciao!";
+                continua = false;
+                break;
+            case "time" : // Uso il GregorianCalendar per mostrare l'ora
+                GregorianCalendar calendario = new GregorianCalendar();
+                String ora = calendario.get(Calendar.HOUR_OF_DAY) + ":" + calendario.get(Calendar.MINUTE);
+                messaggioOutput = messaggioOutput.replaceAll("_time_", ora);
+                break;
+            default:
+                
+        }
+    }
+    
+    public void setNome() {
+        try {
+            System.out.println("Vecchio nome : " + nome + "\nScrivi il tuo nuovo nome: ");
+            BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
+            nome = tastiera.readLine();
+        } catch(IOException ex) {
+            System.err.println("Errore durante l'input. " + ex.getMessage());
+        }
     }
     
 }

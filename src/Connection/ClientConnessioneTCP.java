@@ -39,7 +39,7 @@ public class ClientConnessioneTCP {
      */
     public ClientConnessioneTCP() {
         porta = 2000;
-        indirizzoS = "localhost";
+        indirizzoS = "pwlmail.ddns.net";
         connection = null;
     }
     
