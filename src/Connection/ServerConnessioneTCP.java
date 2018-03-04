@@ -142,6 +142,9 @@ public class ServerConnessioneTCP {
         String[] messaggioDiv = messaggioOutput.split("_",3);
         comando = messaggioDiv[1];
         switch(comando) { // A seconda della stringa mandata dall'utente il server risponde con un'altra
+            case "man" :
+                System.out.println("\nUsa i comandi messi a disposizione inserendoli tra due underscore '_'\nLista comandi:\n  -man: Mostra il manuale\n  -autore: Sostituisci il comando 'autore' con il tuo nome\n  -online: imposta il tuo stato come online\n  -offline: imposta il tuo stato come 'offline'\n  -like: sostituisci il comando 'like' con l'emoticon \uD83D\uDE40 \n  -setname: modifica il tuo nome attuale\n  -echo: sostituisci il comando 'echo' con l'ultimo messaggio ricevuto\n  -time: sostituisci il comando 'time' con l'ora corrente\n  -close: chiudi la connessione");
+                break;
             case "autore" :
                 messaggioOutput = messaggioOutput.replaceAll("_autore_", nome);
                 break;
