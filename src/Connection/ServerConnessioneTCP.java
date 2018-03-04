@@ -29,22 +29,24 @@ public class ServerConnessioneTCP {
     /**
      * Oggetto Socket assegnato alla singola conversazione
      */
-    Socket connection;
+    private Socket connection;
     
     /**
      * Oggetto ServerSocket
      */
-    ServerSocket sSocket;
+    private ServerSocket sSocket;
     
-    boolean continua;
+    private boolean continua;
     
-    String messaggioOutput;
+    private String messaggioOutput;
     
-    String comando;
+    private String messaggioInput;
     
-    String nome;
+    private String comando;
     
-    boolean online;
+    private String nome;
+    
+    private boolean online;
     
     /**
      * Costruttore della classe ServerConnessioneTCP
@@ -54,6 +56,7 @@ public class ServerConnessioneTCP {
         continua = true;
         sSocket = null;
         messaggioOutput = "";
+        messaggioInput = "";
         comando = "";
         nome = "anon";
         online = true;
@@ -97,28 +100,22 @@ public class ServerConnessioneTCP {
      * Metodo che legge la stringa inviata da un client e ne elabora una risposta
      */
     public void rispondi() {
-        String messaggioInput;
+        
         try {
             // Creo input e output per streams orientati ai byte
             BufferedReader inputServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            ThreadStreamInput in = new ThreadStreamInput(inputServer, this);
             PrintStream outputServer = new PrintStream(connection.getOutputStream());
             BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
-            
+            in.start();
             do {
-                messaggioInput = inputServer.readLine();
-                if(messaggioInput.equals("Ciao ciao!")) { // Se il sever risponde ciao ciao allora si ritorna falso
-                    continua = false;
-                }
-                // Mostro la stringa che il client ha mandato
-                System.out.println("\n\nMessaggio del client : " + messaggioInput);
                 messaggioOutput = tastiera.readLine().toLowerCase();
                 if(messaggioOutput.contains("_")) {
-                    gestisciMessaggio(messaggioInput);
+                    gestisciMessaggio();
                 }
                 // Inoltro la risposta al client
                 outputServer.println(messaggioOutput);
                 outputServer.flush();
-                System.out.println("Risposta inoltrata!");
             } while(continua);
             
         } catch (IOException ex) {
@@ -140,7 +137,7 @@ public class ServerConnessioneTCP {
         System.out.println("\nConnessione chiusa!");
     }
     
-    public void gestisciMessaggio(String messaggioInput) {
+    public void gestisciMessaggio() {
         String[] messaggioDiv = messaggioOutput.split("_",3);
         comando = messaggioDiv[1];
         switch(comando) { // A seconda della stringa mandata dall'utente il server risponde con un'altra
@@ -190,4 +187,11 @@ public class ServerConnessioneTCP {
         }
     }
     
+    public void setContinua(boolean b) {
+        continua = b;
+    }
+    
+    public void setMsgInput(String in) {
+        messaggioInput = in;
+    }
 }

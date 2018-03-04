@@ -36,15 +36,17 @@ public class ClientConnessioneTCP {
      */
     private Socket connection;
     
-    boolean continua;
+    private boolean continua;
     
-    String messaggioOutput;
+    private String messaggioOutput;
     
-    String comando;
+    private String messaggioInput;
     
-    String nome;
+    private String comando;
     
-    boolean online;
+    private String nome;
+    
+    private boolean online;
     
     /**
      * Costruttore della classe ClientConnessionTCP con valori i default
@@ -55,6 +57,7 @@ public class ClientConnessioneTCP {
         connection = null;
         continua = true;
         messaggioOutput = "";
+        messaggioInput = "";
         comando = "";
         nome = "anon";
         online = true;
@@ -95,31 +98,23 @@ public class ClientConnessioneTCP {
      * Metodo che ottiene la stringa che il server manda come risposta alla richiesta del client
      */
     public void comunicaS() {
-        String messaggioInput = "";
         try {
             BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
             BufferedReader inputClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            ThreadStreamInput in = new ThreadStreamInput(inputClient, this);
+            in.start();
             PrintStream outputClient = new PrintStream(connection.getOutputStream());
             System.out.println("\nPuoi iniziare a chattare!");
             do {
                 // Input da tastiera per il messaggio da mandare al server
-                
                 messaggioOutput = tastiera.readLine().toLowerCase();
                 if(messaggioOutput.contains("_")) {
-                    gestisciMessaggio(messaggioInput);
+                    gestisciMessaggio();
                 }
                 
                 // Invio il messaggio al server
                 outputClient.println(messaggioOutput);
                 outputClient.flush();
-
-                // Ricevo la risposta del server
-                messaggioInput = inputClient.readLine();
-                System.out.println(messaggioInput);
-
-                if(messaggioInput.equals("Ciao ciao!")) { // Se il sever risponde ciao ciao allora si ritorna falso
-                    continua = false;
-                }
             } while(continua);  // Conntinuo a ripetere fino a quando .comunicaS() ritorna false
             
         } catch (IOException ex) {
@@ -140,7 +135,7 @@ public class ClientConnessioneTCP {
         }
     }
     
-    public void gestisciMessaggio(String messaggioInput) {
+    public void gestisciMessaggio() {
         String[] messaggioDiv = messaggioOutput.split("_",3);
         comando = messaggioDiv[1];
         switch(comando) { // A seconda della stringa mandata dall'utente il server risponde con un'altra
@@ -188,5 +183,13 @@ public class ClientConnessioneTCP {
         } catch(IOException ex) {
             System.err.println("Errore durante l'input. " + ex.getMessage());
         }
+    }
+    
+    public void setContinua(boolean b) {
+        continua = b;
+    }
+    
+    public void setMsgInput(String in) {
+        messaggioInput = in;
     }
 }
