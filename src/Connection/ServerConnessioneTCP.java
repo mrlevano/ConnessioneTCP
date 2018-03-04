@@ -106,7 +106,9 @@ public class ServerConnessioneTCP {
             
             do {
                 messaggioInput = inputServer.readLine();
-                
+                if(messaggioInput.equals("Ciao ciao!")) { // Se il sever risponde ciao ciao allora si ritorna falso
+                    continua = false;
+                }
                 // Mostro la stringa che il client ha mandato
                 System.out.println("\n\nMessaggio del client : " + messaggioInput);
                 messaggioOutput = tastiera.readLine().toLowerCase();
