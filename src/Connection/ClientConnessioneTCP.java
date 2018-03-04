@@ -192,4 +192,8 @@ public class ClientConnessioneTCP {
     public void setMsgInput(String in) {
         messaggioInput = in;
     }
+    
+    public boolean isOnline() {
+        return online;
+    }
 }

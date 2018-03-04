@@ -41,24 +41,24 @@ public class ThreadStreamInput extends Thread {
         String messaggioInput;
         try {
             do {
-            // Ricevo la risposta del server
-            messaggioInput = in.readLine();
-            if(server == null) {
-                client.setMsgInput(messaggioInput);
-            } else {
-                server.setMsgInput(messaggioInput);
-            }
-            System.out.println("Messaggio: " + messaggioInput);
-            
-            
-            if(messaggioInput.equals("Ciao ciao!")) { // Se il sever risponde ciao ciao allora si ritorna falso
-                continua = false;
+                // Ricevo la risposta del server
+                messaggioInput = in.readLine();
                 if(server == null) {
-                    client.setContinua(continua);
+                    client.setMsgInput(messaggioInput);
                 } else {
-                    server.setContinua(continua);
+                    server.setMsgInput(messaggioInput);
                 }
-            }
+                System.out.println("Messaggio: " + messaggioInput);
+
+
+                if(messaggioInput.equals("Ciao ciao!")) { // Se il sever risponde ciao ciao allora si ritorna falso
+                    continua = false;
+                    if(server == null) {
+                        client.setContinua(continua);
+                    } else {
+                        server.setContinua(continua);
+                    }
+                }
             }while(continua);
         } catch(IOException ex) {
             System.err.println("Errore : " + ex.getMessage());
