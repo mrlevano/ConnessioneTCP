@@ -99,5 +99,6 @@ public class ClientConnessioneTCP {
                 System.err.println("\nErrore durante la chiusura: " + ex.getMessage());
             }
         }
+        System.out.println("\nConnessione chiusa!");
     }
 }
