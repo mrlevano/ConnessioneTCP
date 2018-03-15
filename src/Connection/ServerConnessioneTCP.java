@@ -104,9 +104,11 @@ public class ServerConnessioneTCP {
         try {
             // Creo input e output per streams orientati ai byte
             BufferedReader inputServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            ThreadStreamInput in = new ThreadStreamInput(inputServer, this);
+            //ThreadStreamInput in = new ThreadStreamInput(inputServer, this);
             PrintStream outputServer = new PrintStream(connection.getOutputStream());
-            BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
+            Gestore gestione = new Gestore(inputServer, outputServer);
+            gestione.comunicaS();
+            /*BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
             in.start();
             do {
                 messaggioOutput = tastiera.readLine().toLowerCase();
@@ -117,7 +119,7 @@ public class ServerConnessioneTCP {
                 outputServer.println(messaggioOutput);
                 outputServer.flush();
             } while(continua);
-            
+            */
         } catch (IOException ex) {
             System.err.println("Errore di scrittura : " + ex.getMessage());
         }

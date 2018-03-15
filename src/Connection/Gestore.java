@@ -66,7 +66,7 @@ public class Gestore {
     }
     
     public void gestisciMessaggio() {
-        String[] messaggioDiv = messaggioOutput.split("_",3);
+        String[] messaggioDiv = messaggioOutput.split("_",3); // Divido il messaggio in tre blocchi, uno di questi conterrà il comando digitato dall'utente
         comando = messaggioDiv[1];
         switch(comando) { // A seconda della stringa mandata dall'utente il server risponde con un'altra
             case "man" :

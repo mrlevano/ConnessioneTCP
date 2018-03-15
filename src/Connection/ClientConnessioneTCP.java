@@ -99,11 +99,14 @@ public class ClientConnessioneTCP {
      */
     public void comunicaS() {
         try {
-            BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
+            //BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
             BufferedReader inputClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            ThreadStreamInput in = new ThreadStreamInput(inputClient, this);
-            in.start();
+            //ThreadStreamInput in = new ThreadStreamInput(inputClient, this);
+            //in.start();
             PrintStream outputClient = new PrintStream(connection.getOutputStream());
+            Gestore gestione = new Gestore(inputClient, outputClient);
+            gestione.comunicaS();
+            /*
             System.out.println("\nPuoi iniziare a chattare!");
             do {
                 // Input da tastiera per il messaggio da mandare al server
@@ -116,7 +119,7 @@ public class ClientConnessioneTCP {
                 outputClient.println(messaggioOutput);
                 outputClient.flush();
             } while(continua);  // Conntinuo a ripetere fino a quando .comunicaS() ritorna false
-            
+            */
         } catch (IOException ex) {
             System.err.println("Errore : " + ex.getMessage());
         }
