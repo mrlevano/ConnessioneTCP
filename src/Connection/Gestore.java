@@ -59,12 +59,23 @@ public class Gestore {
                 if(messaggioOutput.contains("_")) {
                     gestisciMessaggio();
                 }
-                
+                if(messaggioInput.equals("L'utente ha chiuso la connessione.")) {
+                    System.out.println("Il messaggio non sarà inviato.");
+                    messaggioOutput = "Conferma chiusura.";
+                }
                 // Invio il messaggio al server
                 out.println(messaggioOutput);
                 out.flush();
-            } while(continua);  // Conntinuo a ripetere fino a quando .comunicaS() ritorna false
+            } while(continua);  // Continuo a ripetere fino a quando .comunicaS() ritorna false
             
+            // Si attende fino a quanto il thread di ascolto viene chiuso correttamente
+            boolean stampa = true;
+            while(inThread.isAlive()) { 
+                if(stampa) {
+                    System.out.println("In attesa di conferma chiusura");
+                    stampa = false;
+                }
+            }
         } catch (IOException ex) {
             System.err.println("Errore : " + ex.getMessage());
         }
@@ -96,7 +107,7 @@ public class Gestore {
                 messaggioOutput = messaggioOutput.replaceAll("_echo_", messaggioInput);
                 break;
             case "close" :
-                messaggioOutput = "Ciao ciao!";
+                messaggioOutput = "L'utente ha chiuso la connessione.";
                 continua = false;
                 break;
             case "time" : // Uso il GregorianCalendar per mostrare l'ora

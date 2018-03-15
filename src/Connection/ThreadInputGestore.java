@@ -18,11 +18,8 @@ public class ThreadInputGestore extends Thread {
     
     private final Gestore user;
     
-    private boolean continua;
-    
     public ThreadInputGestore(BufferedReader in, Gestore user) {
         this.in = in;
-        continua = true;
         this.user = user;
     }
     
@@ -32,16 +29,16 @@ public class ThreadInputGestore extends Thread {
         try {
             do {
                 // Ricevo la risposta del server
+                // è necessaria la conferma per la chiusura della connessione in quanto uno dei due thread di input sarà in ascolto durante la connessione
                 messaggioInput = in.readLine();
                 user.setMsgInput(messaggioInput);
-                System.out.println("Messaggio: " + messaggioInput);
-
-
-                if(messaggioInput.equals("Ciao ciao!")) { // Se il sever risponde ciao ciao allora si ritorna falso
-                    continua = false;
-                    user.setContinua(continua);
+                if(!messaggioInput.equals("Conferma chiusura.")) { // Controllo se l'altro utente ha mandato un messaggio di conferma per la chiusura del messaggio
+                    System.out.println("Messaggio: " + messaggioInput);
+                    if(messaggioInput.equals("L'utente ha chiuso la connessione.")) { // Se il sever risponde ciao ciao allora si ritorna falso
+                        user.setContinua(false);
+                    }
                 }
-            }while(continua);
+            }while(user.getContinua());
         } catch(IOException ex) {
             System.err.println("Errore di lettura : " + ex.getMessage());
         }
