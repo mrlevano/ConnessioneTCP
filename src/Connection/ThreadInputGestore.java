@@ -12,28 +12,18 @@ import java.io.IOException;
  *
  * @author jesus
  */
-public class ThreadStreamInput extends Thread {
+public class ThreadInputGestore extends Thread {
     
     private final BufferedReader in;
     
-    private final ClientConnessioneTCP client;
-    
-    private final ServerConnessioneTCP server;
+    private final Gestore user;
     
     private boolean continua;
     
-    public ThreadStreamInput(BufferedReader in, ClientConnessioneTCP client) {
+    public ThreadInputGestore(BufferedReader in, Gestore user) {
         this.in = in;
         continua = true;
-        this.client = client;
-        server = null;
-    }
-    
-    public ThreadStreamInput(BufferedReader in, ServerConnessioneTCP server) {
-        this.in = in;
-        continua = true;
-        this.server = server;
-        client = null;
+        this.user = user;
     }
     
     @Override
@@ -43,21 +33,13 @@ public class ThreadStreamInput extends Thread {
             do {
                 // Ricevo la risposta del server
                 messaggioInput = in.readLine();
-                if(server == null) {
-                    client.setMsgInput(messaggioInput);
-                } else {
-                    server.setMsgInput(messaggioInput);
-                }
+                user.setMsgInput(messaggioInput);
                 System.out.println("Messaggio: " + messaggioInput);
 
 
                 if(messaggioInput.equals("Ciao ciao!")) { // Se il sever risponde ciao ciao allora si ritorna falso
                     continua = false;
-                    if(server == null) {
-                        client.setContinua(continua);
-                    } else {
-                        server.setContinua(continua);
-                    }
+                    user.setContinua(continua);
                 }
             }while(continua);
         } catch(IOException ex) {

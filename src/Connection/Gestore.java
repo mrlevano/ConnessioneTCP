@@ -5,13 +5,7 @@
  */
 package Connection;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.net.ConnectException;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.io.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -19,22 +13,11 @@ import java.util.GregorianCalendar;
  *
  * @author jesus
  */
-public class ClientConnessioneTCP {
+public class Gestore {
     
-    /**
-     * Porta nella quale il server è in ascolto
-     */
-    private final int porta;
+    private final BufferedReader in;
     
-    /**
-     * Indirizzo del server
-     */
-    private final String indirizzoS;
-    
-    /**
-     * Oggetto Socket
-     */
-    private Socket connection;
+    private final PrintStream out;
     
     private boolean continua;
     
@@ -48,13 +31,9 @@ public class ClientConnessioneTCP {
     
     private boolean online;
     
-    /**
-     * Costruttore della classe ClientConnessionTCP con valori i default
-     */
-    public ClientConnessioneTCP() {
-        porta = 2000;
-        indirizzoS = "localhost";
-        connection = null;
+    public Gestore(BufferedReader in, PrintStream out) {
+        this.in = in;
+        this.out = out;
         continua = true;
         messaggioOutput = "";
         messaggioInput = "";
@@ -63,47 +42,11 @@ public class ClientConnessioneTCP {
         online = true;
     }
     
-    /**
-     * Costruttore della classe ClientConnessionTCP sovraccaricato con valori in input
-     * @param indirizzoS indirizzo del server
-     * @param porta nella quale il server è in ascolto
-     */
-    public ClientConnessioneTCP(String indirizzoS, int porta) {
-        this.porta = porta;
-        this.indirizzoS = indirizzoS;
-        connection = null;
-        continua = true;
-        messaggioOutput = "";
-        comando = "";
-        nome = "anon";
-        online = true;
-    }
-    
-    /**
-     * Metodo che avvia una connessione e una comunicazione con il server
-     */
-    public void avviaConnessione() {
-        try {
-            this.connection = new Socket(indirizzoS, porta);
-        } catch(ConnectException e){
-            System.err.println("Server non disponibile!\n" + e.getMessage());
-        } catch(UnknownHostException e1){
-            System.err.println("Errore DNS!\n" + e1.getMessage());
-        } catch (IOException e2) {
-            System.err.println("Errore : " + e2.getMessage());
-        }
-    }
-    
-    /**
-     * Metodo che ottiene la stringa che il server manda come risposta alla richiesta del client
-     */
     public void comunicaS() {
         try {
             BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
-            BufferedReader inputClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            ThreadStreamInput in = new ThreadStreamInput(inputClient, this);
-            in.start();
-            PrintStream outputClient = new PrintStream(connection.getOutputStream());
+            ThreadInputGestore inThread = new ThreadInputGestore(in, this);
+            inThread.start();
             System.out.println("\nPuoi iniziare a chattare!");
             do {
                 // Input da tastiera per il messaggio da mandare al server
@@ -113,25 +56,12 @@ public class ClientConnessioneTCP {
                 }
                 
                 // Invio il messaggio al server
-                outputClient.println(messaggioOutput);
-                outputClient.flush();
+                out.println(messaggioOutput);
+                out.flush();
             } while(continua);  // Conntinuo a ripetere fino a quando .comunicaS() ritorna false
             
         } catch (IOException ex) {
             System.err.println("Errore : " + ex.getMessage());
-        }
-    }
-    
-    /**
-     * Metodo che chiude la connessione con il server
-     */
-    public void chiudiConnessione() {
-        if(connection != null) { // Se l'oggetto connection non è nullo, allora chiudo la connessione
-            try {
-                connection.close();
-            } catch (IOException ex) {
-                System.err.println("\nErrore durante la chiusura: " + ex.getMessage());
-            }
         }
     }
     
@@ -200,4 +130,5 @@ public class ClientConnessioneTCP {
     public synchronized boolean getContinua() {
         return continua;
     }
+    
 }

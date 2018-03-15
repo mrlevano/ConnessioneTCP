@@ -119,7 +119,7 @@ public class ServerConnessioneTCP {
             } while(continua);
             
         } catch (IOException ex) {
-            System.err.println("Errore : " + ex.getMessage());
+            System.err.println("Errore di scrittura : " + ex.getMessage());
         }
     }
     
@@ -191,11 +191,15 @@ public class ServerConnessioneTCP {
         continua = b;
     }
     
-    public void setMsgInput(String in) {
+    public synchronized void setMsgInput(String in) {
         messaggioInput = in;
     }
     
-    public boolean isOnline() {
+    public synchronized boolean isOnline() {
         return online;
+    }
+    
+    public synchronized boolean getContinua() {
+        return continua;
     }
 }
