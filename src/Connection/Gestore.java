@@ -15,27 +15,56 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
- *
+ * Classe che consente la gestione dello stream di input e di output del socket
  * @author jesus
  */
 public class Gestore {
     
+    /**
+     * Stream di input del socket
+     */
     private final BufferedReader in;
     
+    /**
+     * Stream di output del socket
+     */
     private final PrintStream out;
     
+    /**
+     * Booleana che indica se si deve continuare la chat oppure chiudere la connessione
+     */
     private boolean continua;
     
+    /**
+     * Stringa che contiene il messaggio di output
+     */
     private String messaggioOutput;
     
+    /**
+     * Stringa che contiene il messaggio di input
+     */
     private String messaggioInput;
     
+    /**
+     * Stringa che contiene il comando inserito
+     */
     private String comando;
     
+    /**
+     * Stringa che contiene il nome dell'utente
+     */
     private String nome;
     
+    /**
+     * Booleana che indica se l'utente è online oppure no
+     */
     private boolean online;
     
+    /**
+     * Costruttore della classe Gestore
+     * @param in
+     * @param out 
+     */
     public Gestore(InputStream in, OutputStream out) {
         this.in = new BufferedReader(new InputStreamReader(in));
         this.out = new PrintStream(out);
@@ -47,6 +76,9 @@ public class Gestore {
         online = true;
     }
     
+    /**
+     * Metodo che si occupa di gestire la scrittura ad un utente di messaggi presi in input da tastiera e istanzia il thread che si occupa di scoltare
+     */
     public void comunicaS() {
         try {
             BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
@@ -81,6 +113,9 @@ public class Gestore {
         }
     }
     
+    /**
+     * Metodo che permette la gestione del comando che si inserisce nel messaggio
+     */
     public void gestisciMessaggio() {
         String[] messaggioDiv = messaggioOutput.split("_",3); // Divido il messaggio in tre blocchi, uno di questi conterrà il comando digitato dall'utente
         comando = messaggioDiv[1];
@@ -121,6 +156,9 @@ public class Gestore {
         }
     }
     
+    /**
+     * Metodo che permette di cambiare il proprio nome tramite input da tastiera
+     */
     public void setNome() {
         try {
             System.out.println("Vecchio nome : " + nome + "\nScrivi il tuo nuovo nome: ");
@@ -131,18 +169,34 @@ public class Gestore {
         }
     }
     
+    /**
+     * Metodo che permette di modificare il valore dell'attributo continua
+     * @param b valore che si vuole assegnare all'attributo continua
+     */
     public synchronized void setContinua(boolean b) {
         continua = b;
     }
     
+    /**
+     * Metodo che permette di modificare il valore dell'attributo messaggioInput
+     * @param in valore che si vuole assegnare all'attributo messaggioInput
+     */
     public synchronized void setMsgInput(String in) {
         messaggioInput = in;
     }
     
+    /**
+     * Metodo che permette di ottenere il valore dell'attributo online
+     * @return valore della booleana online
+     */
     public synchronized boolean isOnline() {
         return online;
     }
     
+    /**
+     * Metodo che permette di ottenere il valore dell'attributo continua
+     * @return valore della booleana continua
+     */
     public synchronized boolean getContinua() {
         return continua;
     }

@@ -9,15 +9,26 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
- *
+ * Classe che consente il continuo ascolto e stampa dei messaggi in input da parte del socket
  * @author jesus
  */
 public class ThreadInputGestore extends Thread {
     
+    /**
+     * Stream di input del socket
+     */
     private final BufferedReader in;
     
+    /**
+     * Riferimento al gestore al quale il thread appartiene
+     */
     private final Gestore user;
     
+    /**
+     * Costruttore della classe ThreadInputGestore
+     * @param in Stream di input
+     * @param user Riferimento al gestore al quale il thread appartiene
+     */
     public ThreadInputGestore(BufferedReader in, Gestore user) {
         this.in = in;
         this.user = user;
