@@ -7,7 +7,9 @@ package Connection;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -34,9 +36,9 @@ public class Gestore {
     
     private boolean online;
     
-    public Gestore(BufferedReader in, PrintStream out) {
-        this.in = in;
-        this.out = out;
+    public Gestore(InputStream in, OutputStream out) {
+        this.in = new BufferedReader(new InputStreamReader(in));
+        this.out = new PrintStream(out);
         continua = true;
         messaggioOutput = "";
         messaggioInput = "";

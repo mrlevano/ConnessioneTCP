@@ -35,11 +35,17 @@ public class ServerConnessioneTCP {
     private ServerSocket sSocket;
     
     /**
+     * Oggetto che si occupa della gestione della comunicazione
+     */
+    private Gestore gestione;
+    
+    /**
      * Costruttore della classe ServerConnessioneTCP
      */
     public ServerConnessioneTCP() {
         porta = 2000;
         sSocket = null;
+        gestione = null;
     }
     
     /**
@@ -49,6 +55,7 @@ public class ServerConnessioneTCP {
     public ServerConnessioneTCP(int porta) {
         this.porta = porta;
         sSocket = null;
+        gestione = null;
     }
     
     /**
@@ -77,9 +84,7 @@ public class ServerConnessioneTCP {
     public void rispondi() {
         try {
             // Creo input e output per streams orientati ai byte
-            BufferedReader inputServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            PrintStream outputServer = new PrintStream(connection.getOutputStream());
-            Gestore gestione = new Gestore(inputServer, outputServer);
+            gestione = new Gestore(connection.getInputStream(), connection.getOutputStream());
             gestione.comunicaS();
         } catch (IOException ex) {
             System.err.println("Errore di scrittura : " + ex.getMessage());

@@ -35,12 +35,18 @@ public class ClientConnessioneTCP {
     private Socket connection;
     
     /**
+     * Oggetto che si occupa della gestione della comunicazione
+     */
+    private Gestore gestione;
+    
+    /**
      * Costruttore della classe ClientConnessionTCP con valori i default
      */
     public ClientConnessioneTCP() {
         porta = 2000;
         indirizzoS = "localhost";
         connection = null;
+        gestione = null;
     }
     
     /**
@@ -52,6 +58,7 @@ public class ClientConnessioneTCP {
         this.porta = porta;
         this.indirizzoS = indirizzoS;
         connection = null;
+        gestione = null;
     }
     
     /**
@@ -74,9 +81,7 @@ public class ClientConnessioneTCP {
      */
     public void comunicaS() {
         try {
-            BufferedReader inputClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            PrintStream outputClient = new PrintStream(connection.getOutputStream());
-            Gestore gestione = new Gestore(inputClient, outputClient);
+            gestione = new Gestore(connection.getInputStream(), connection.getOutputStream());
             gestione.comunicaS();
         } catch (IOException ex) {
             System.err.println("Errore : " + ex.getMessage());
